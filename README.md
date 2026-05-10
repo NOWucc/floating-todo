@@ -11,7 +11,7 @@
 - ↕️ **可拖动 + 可调整大小** — 位置和尺寸自动记忆
 - 📅 **顶部显示日期** — 例 `2026.4.26`
 - ✅ **待办事项管理** — 增删改、双击编辑、勾选完成（带删除线）
-- 🎨 **背景设置** — 8 种预设便签色 + 自定义 HEX 颜色 + 本地图片背景
+- 🎨 **背景设置** — 8 种预设便签色（自定义 HEX 颜色与本地图片背景功能待修复）
 
 ### 内置日历视图
 - 点击卡片左上角的 **📅 日历** 标签按钮即可切换
@@ -44,20 +44,6 @@ npm run dev
 
 开发模式下窗口自带 DevTools，方便调试。
 
-### 打包（生成 .exe）
-```bash
-npm run build
-```
-
-产物输出到 `release/`：
-- `FloatingTodo-0.1.0-x64.exe` — NSIS 安装包
-- `FloatingTodo-0.1.0-x64.exe`（portable）— 免安装便携版
-
-### 仅生成解包目录（快速验证）
-```bash
-npm run build:dir
-```
-
 ---
 
 ## 🏗️ 架构
@@ -75,24 +61,17 @@ floating-todo/
 │   ├── store/             # Zustand 全局状态（含持久化桥接）
 │   ├── utils/             # 日期工具
 │   └── types/
-├── electron-builder.yml   # 打包配置
-└── .github/workflows/     # GitHub Actions 自动打包
 ```
 
 **技术栈**：Electron 33 + React 18 + TypeScript + Tailwind CSS + Zustand + electron-store
 
 ---
 
-## 📦 GitHub 自动发布
+## 🐛 已知问题
 
-仓库已包含 `.github/workflows/build.yml`，推送 tag 即可自动打包并发 Release：
-
-```bash
-git tag v0.1.0
-git push origin v0.1.0
-```
-
-Actions 会在 windows-latest 上构建并上传 `.exe` 到 GitHub Releases。
+- **界面样式** — 整体 UI 仍需打磨优化
+- **自定义 HEX 颜色** — 背景设置中的自定义颜色输入功能尚未实现
+- **本地图片背景** — 图片背景功能存在 bug，尚未修复
 
 ---
 
