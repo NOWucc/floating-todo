@@ -77,7 +77,7 @@ function createWindow() {
     alwaysOnTop: true,
     skipTaskbar: false,
     hasShadow: true,
-    backgroundColor: '#FFF6B7',
+    backgroundColor: '#b2dfdb',
     show: false,
     webPreferences: {
       preload: preloadPath,
@@ -142,13 +142,14 @@ ipcMain.handle('dialog:pickImage', async () => {
   });
   if (result.canceled || result.filePaths.length === 0) return null;
   const srcPath = result.filePaths[0];
-  const ext = path.extname(srcPath);
-  const userData = app.getPath('userData');
-  const bgDir = path.join(userData, 'backgrounds');
-  if (!fs.existsSync(bgDir)) fs.mkdirSync(bgDir, { recursive: true });
-  const destPath = path.join(bgDir, `bg_${Date.now()}${ext}`);
-  fs.copyFileSync(srcPath, destPath);
-  return `file:///${destPath.replace(/\\/g, '/')}`;
+  const ext = path.extname(srcPath).toLowerCase().replace('.', '');
+  const mimeMap: Record<string, string> = {
+    jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png',
+    gif: 'image/gif', webp: 'image/webp', bmp: 'image/bmp',
+  };
+  const mime = mimeMap[ext] || 'image/jpeg';
+  const data = fs.readFileSync(srcPath);
+  return `data:${mime};base64,${data.toString('base64')}`;
 });
 ipcMain.on('window:minimize', () => mainWindow?.minimize());
 ipcMain.on('window:close', () => mainWindow?.close());

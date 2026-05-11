@@ -2,7 +2,6 @@ import { useMemo, useState } from 'react';
 import { useAppStore } from '../../store/useAppStore';
 import { toDateKey, formatDisplay } from '../../utils/date';
 import TodoItem from './TodoItem';
-import CalendarTab from './CalendarTab';
 import BackgroundSettings from './BackgroundSettings';
 
 export default function TodoCard() {
@@ -10,6 +9,8 @@ export default function TodoCard() {
   const todosByDate = useAppStore((s) => s.todosByDate);
   const background = useAppStore((s) => s.background);
   const addTodo = useAppStore((s) => s.addTodo);
+
+  const setViewMode = useAppStore((s) => s.setViewMode);
 
   const [input, setInput] = useState('');
   const [showSettings, setShowSettings] = useState(false);
@@ -20,7 +21,7 @@ export default function TodoCard() {
   // 卡片背景样式
   const cardStyle: React.CSSProperties =
     background.type === 'color'
-      ? { background: background.value }
+      ? { backgroundColor: background.value }
       : {
           backgroundImage: `url("${background.value}")`,
           backgroundSize: 'cover',
@@ -35,15 +36,12 @@ export default function TodoCard() {
   };
 
   return (
-    <div className="h-full w-full p-2 pt-5">
+    <div className="h-full w-full">
       {/* 卡片本体 */}
       <div
-        className="relative h-full w-full rounded-2xl shadow-xl flex flex-col overflow-visible"
+        className="relative h-full w-full flex flex-col overflow-hidden"
         style={cardStyle}
       >
-        {/* 日历标签按钮（左上方"贴纸"） */}
-        <CalendarTab />
-
         {/* 顶部窗口拖动条 + 控制按钮 */}
         <div className="drag-region flex items-center justify-between px-4 pt-3 pb-1">
           <div className="text-base font-semibold text-gray-800/90 select-none">
@@ -55,7 +53,22 @@ export default function TodoCard() {
               className="w-7 h-7 rounded-full hover:bg-black/10 flex items-center justify-center text-gray-700"
               title="背景设置"
             >
-              ⚙
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+              </svg>
+            </button>
+            <button
+              onClick={() => setViewMode('calendar')}
+              className="w-7 h-7 rounded-full hover:bg-black/10 flex items-center justify-center text-gray-700"
+              title="打开日历视图"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
             </button>
             <button
               onClick={() => window.electronAPI.minimize()}

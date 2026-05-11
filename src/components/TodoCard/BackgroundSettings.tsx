@@ -18,14 +18,23 @@ export default function BackgroundSettings({ onClose }: { onClose: () => void })
   const [hexInput, setHexInput] = useState(
     background.type === 'color' ? background.value : '#FFF6B7'
   );
+  const [hexError, setHexError] = useState(false);
 
   const handleColor = (color: string) => {
     setBackground({ type: 'color', value: color });
   };
 
-  const handleHexConfirm = () => {
-    if (/^#[0-9A-Fa-f]{6}$/.test(hexInput)) {
-      handleColor(hexInput);
+  const applyHex = () => {
+    let v = hexInput.trim();
+    if (!v.startsWith('#')) v = '#' + v;
+    if (/^#[0-9A-Fa-f]{3}$/.test(v)) {
+      v = '#' + v[1] + v[1] + v[2] + v[2] + v[3] + v[3];
+    }
+    if (/^#[0-9A-Fa-f]{6}$/.test(v)) {
+      setHexError(false);
+      setBackground({ type: 'color', value: v });
+    } else {
+      setHexError(true);
     }
   };
 
@@ -62,21 +71,27 @@ export default function BackgroundSettings({ onClose }: { onClose: () => void })
       </div>
 
       <div className="text-xs text-gray-600 mb-1.5">自定义颜色 (HEX)</div>
-      <div className="flex gap-1.5 mb-3">
+      <div className="flex gap-1.5 mb-1">
         <input
           type="text"
           value={hexInput}
-          onChange={(e) => setHexInput(e.target.value)}
+          onChange={(e) => { setHexInput(e.target.value); setHexError(false); }}
+          onKeyDown={(e) => e.key === 'Enter' && applyHex()}
           placeholder="#FFE082"
-          className="flex-1 px-2 py-1 text-xs rounded border border-gray-300 focus:outline-none focus:border-gray-500"
+          className={`flex-1 px-2 py-1 text-xs rounded border focus:outline-none ${hexError ? 'border-red-400 focus:border-red-500' : 'border-gray-300 focus:border-gray-500'}`}
         />
         <button
-          onClick={handleHexConfirm}
+          type="button"
+          onClick={applyHex}
           className="px-3 py-1 text-xs rounded bg-gray-800 text-white hover:bg-gray-900"
         >
           应用
         </button>
       </div>
+      {hexError && (
+        <div className="text-[10px] text-red-500 mb-2">颜色格式无效，请输入如 #A1B2C3 或 #fff</div>
+      )}
+      {!hexError && <div className="mb-2" />}
 
       <div className="text-xs text-gray-600 mb-1.5">自定义图片</div>
       <button
@@ -87,8 +102,8 @@ export default function BackgroundSettings({ onClose }: { onClose: () => void })
       </button>
 
       {background.type === 'image' && (
-        <div className="mt-2 text-[10px] text-gray-500 truncate" title={background.value}>
-          当前：{background.value.split('/').pop()}
+        <div className="mt-2 text-[10px] text-gray-500">
+          当前：已设置图片背景
         </div>
       )}
     </div>

@@ -16,7 +16,7 @@ export default function CalendarView() {
 
   const cardStyle: React.CSSProperties =
     background.type === 'color'
-      ? { background: background.value }
+      ? { backgroundColor: background.value }
       : {
           backgroundImage: `url("${background.value}")`,
           backgroundSize: 'cover',
@@ -32,9 +32,9 @@ export default function CalendarView() {
   };
 
   return (
-    <div className="h-full w-full p-2 pt-3">
+    <div className="h-full w-full">
       <div
-        className="relative h-full w-full rounded-2xl shadow-xl flex flex-col overflow-hidden"
+        className="relative h-full w-full flex flex-col overflow-hidden"
         style={cardStyle}
       >
         {/* 顶栏 */}
