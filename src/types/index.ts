@@ -9,7 +9,8 @@ export type TodosByDate = Record<string, Todo[]>;
 
 export interface Background {
   type: 'color' | 'image';
-  value: string; // color: hex; image: file:// url
+  value: string; // color: hex; image: base64 data url
+  opacity: number; // 0-1, default 1
 }
 
 export type CalendarMode = 'day' | 'week' | 'month';

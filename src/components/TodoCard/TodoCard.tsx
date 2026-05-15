@@ -4,6 +4,14 @@ import { toDateKey, formatDisplay } from '../../utils/date';
 import TodoItem from './TodoItem';
 import BackgroundSettings from './BackgroundSettings';
 
+function hexToRgba(hex: string, alpha: number): string {
+  const h = hex.replace('#', '');
+  const r = parseInt(h.slice(0, 2), 16);
+  const g = parseInt(h.slice(2, 4), 16);
+  const b = parseInt(h.slice(4, 6), 16);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+
 export default function TodoCard() {
   const selectedDate = useAppStore((s) => s.selectedDate);
   const todosByDate = useAppStore((s) => s.todosByDate);
@@ -18,14 +26,14 @@ export default function TodoCard() {
   const dateKey = toDateKey(selectedDate);
   const todos = useMemo(() => todosByDate[dateKey] || [], [todosByDate, dateKey]);
 
-  // 卡片背景样式
-  const cardStyle: React.CSSProperties =
+  const bgLayerStyle: React.CSSProperties =
     background.type === 'color'
-      ? { backgroundColor: background.value }
+      ? { backgroundColor: hexToRgba(background.value, background.opacity) }
       : {
           backgroundImage: `url("${background.value}")`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
+          opacity: background.opacity,
         };
 
   const handleAdd = (e: React.FormEvent) => {
@@ -38,10 +46,9 @@ export default function TodoCard() {
   return (
     <div className="h-full w-full">
       {/* 卡片本体 */}
-      <div
-        className="relative h-full w-full flex flex-col overflow-hidden"
-        style={cardStyle}
-      >
+      <div className="relative h-full w-full flex flex-col overflow-hidden isolate">
+        {/* 背景层：opacity 仅作用于此层，不影响内容 */}
+        <div className="absolute inset-0 -z-10" style={bgLayerStyle} />
         {/* 顶部窗口拖动条 + 控制按钮 */}
         <div className="drag-region flex items-center justify-between px-4 pt-3 pb-1">
           <div className="text-base font-semibold text-gray-800/90 select-none">

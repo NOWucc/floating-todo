@@ -5,6 +5,14 @@ import WeekView from './WeekView';
 import DayView from './DayView';
 import { today } from '../../utils/date';
 
+function hexToRgba(hex: string, alpha: number): string {
+  const h = hex.replace('#', '');
+  const r = parseInt(h.slice(0, 2), 16);
+  const g = parseInt(h.slice(2, 4), 16);
+  const b = parseInt(h.slice(4, 6), 16);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+
 export default function CalendarView() {
   const calendarMode = useAppStore((s) => s.calendarMode);
   const setCalendarMode = useAppStore((s) => s.setCalendarMode);
@@ -14,13 +22,14 @@ export default function CalendarView() {
   // 日历视图当前的"中心日期"，用于导航上一个/下一个
   const [cursor, setCursor] = useState<Date>(today());
 
-  const cardStyle: React.CSSProperties =
+  const bgLayerStyle: React.CSSProperties =
     background.type === 'color'
-      ? { backgroundColor: background.value }
+      ? { backgroundColor: hexToRgba(background.value, background.opacity) }
       : {
           backgroundImage: `url("${background.value}")`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
+          opacity: background.opacity,
         };
 
   const navigate = (delta: number) => {
@@ -33,10 +42,8 @@ export default function CalendarView() {
 
   return (
     <div className="h-full w-full">
-      <div
-        className="relative h-full w-full flex flex-col overflow-hidden"
-        style={cardStyle}
-      >
+      <div className="relative h-full w-full flex flex-col overflow-hidden isolate">
+        <div className="absolute inset-0 -z-10" style={bgLayerStyle} />
         {/* 顶栏 */}
         <div className="drag-region flex items-center justify-between px-3 pt-2 pb-2 bg-white/40">
           <button

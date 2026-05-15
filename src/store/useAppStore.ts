@@ -20,6 +20,7 @@ interface AppState {
   editTodo: (id: string, text: string) => void;
   deleteTodo: (id: string) => void;
   setBackground: (bg: Background) => void;
+  previewBackground: (bg: Background) => void;
 }
 
 // 安全访问 electronAPI
@@ -34,7 +35,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   selectedDate: today(),
   viewMode: 'todo',
   calendarMode: 'month',
-  background: { type: 'color', value: '#FFF6B7' },
+  background: { type: 'color', value: '#FFF6B7', opacity: 1 },
   loaded: false,
   apiError: null,
 
@@ -52,7 +53,9 @@ export const useAppStore = create<AppState>((set, get) => ({
       const data = await a.getAll();
       set({
         todosByDate: data.todosByDate || {},
-        background: data.background || { type: 'color', value: '#FFF6B7' },
+        background: data.background
+          ? { ...data.background, opacity: data.background.opacity ?? 1 }
+          : { type: 'color', value: '#FFF6B7', opacity: 1 },
         calendarMode: data.calendarMode || 'month',
         loaded: true,
       });
@@ -124,5 +127,10 @@ export const useAppStore = create<AppState>((set, get) => ({
   setBackground: (bg) => {
     set({ background: bg });
     api()?.setBackground(bg);
+  },
+
+  previewBackground: (bg) => {
+    set({ background: bg });
+    // 不调用 api，不持久化——仅用于调色盘实时预览
   },
 }));
