@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useAppStore } from '../../store/useAppStore';
 import type { Todo } from '../../types';
 
-export default function TodoItem({ todo }: { todo: Todo }) {
+export default function TodoItem({ todo, onComplete }: { todo: Todo; onComplete?: () => void }) {
   const toggleTodo = useAppStore((s) => s.toggleTodo);
   const editTodo = useAppStore((s) => s.editTodo);
   const deleteTodo = useAppStore((s) => s.deleteTodo);
@@ -22,7 +22,7 @@ export default function TodoItem({ todo }: { todo: Todo }) {
   return (
     <li className="group flex items-center gap-2 py-1 px-2 rounded hover:bg-black/5">
       <button
-        onClick={() => toggleTodo(todo.id)}
+        onClick={() => { if (!todo.done) onComplete?.(); toggleTodo(todo.id); }}
         className={`w-4 h-4 rounded-full border flex-shrink-0 flex items-center justify-center transition ${
           todo.done
             ? 'bg-green-500 border-green-500 text-white'

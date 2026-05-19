@@ -25,7 +25,7 @@
 ### 数据持久化
 所有数据（待办、卡片位置/尺寸、背景、视图模式）通过 `electron-store` 保存在系统用户目录：
 ```
-%APPDATA%/FloatingTodo/config.json
+%APPDATA%/floating-todo/config.json
 ```
 
 > 图片背景以 base64 编码内嵌于 config.json，无需额外目录。

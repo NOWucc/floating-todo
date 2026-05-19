@@ -12,16 +12,32 @@ function hexToRgba(hex: string, alpha: number): string {
   return `rgba(${r},${g},${b},${alpha})`;
 }
 
+const PRAISE_MESSAGES = [
+  "完成！💪", "帅🍾🍾🍾", "又拿下一个！", "稳！",
+  "很好，继续！", "干得漂亮！", "搞定！",
+  "nice！！！！🎉🎉🎉", "棒棒嘟😊", "继续保持！",
+];
+const randomPraise = () => PRAISE_MESSAGES[Math.floor(Math.random() * PRAISE_MESSAGES.length)];
+
+function shiftDate(date: Date, days: number): Date {
+  const d = new Date(date);
+  d.setDate(d.getDate() + days);
+  return d;
+}
+
 export default function TodoCard() {
   const selectedDate = useAppStore((s) => s.selectedDate);
   const todosByDate = useAppStore((s) => s.todosByDate);
   const background = useAppStore((s) => s.background);
   const addTodo = useAppStore((s) => s.addTodo);
+  const setSelectedDate = useAppStore((s) => s.setSelectedDate);
 
   const setViewMode = useAppStore((s) => s.setViewMode);
 
   const [input, setInput] = useState('');
   const [showSettings, setShowSettings] = useState(false);
+  const [praiseVisible, setPraiseVisible] = useState(false);
+  const [praiseMessage, setPraiseMessage] = useState('');
 
   const dateKey = toDateKey(selectedDate);
   const todos = useMemo(() => todosByDate[dateKey] || [], [todosByDate, dateKey]);
@@ -51,8 +67,24 @@ export default function TodoCard() {
         <div className="absolute inset-0 -z-10" style={bgLayerStyle} />
         {/* 顶部窗口拖动条 + 控制按钮 */}
         <div className="drag-region flex items-center justify-between px-4 pt-3 pb-1">
-          <div className="text-base font-semibold text-gray-800/90 select-none">
-            {formatDisplay(selectedDate)}
+          <div className="no-drag flex items-center gap-1">
+            <button
+              onClick={() => setSelectedDate(shiftDate(selectedDate, -1))}
+              className="w-5 h-5 flex items-center justify-center rounded hover:bg-black/10 text-gray-700 text-sm leading-none"
+              title="前一天"
+            >
+              ‹
+            </button>
+            <span className="text-base font-semibold text-gray-800/90 select-none">
+              {formatDisplay(selectedDate)}
+            </span>
+            <button
+              onClick={() => setSelectedDate(shiftDate(selectedDate, 1))}
+              className="w-5 h-5 flex items-center justify-center rounded hover:bg-black/10 text-gray-700 text-sm leading-none"
+              title="后一天"
+            >
+              ›
+            </button>
           </div>
           <div className="no-drag flex items-center gap-1">
             <button
@@ -103,7 +135,11 @@ export default function TodoCard() {
           ) : (
             <ul className="space-y-1">
               {todos.map((todo) => (
-                <TodoItem key={todo.id} todo={todo} />
+                <TodoItem
+                  key={todo.id}
+                  todo={todo}
+                  onComplete={() => { setPraiseMessage(randomPraise()); setPraiseVisible(true); }}
+                />
               ))}
             </ul>
           )}
@@ -132,6 +168,20 @@ export default function TodoCard() {
         {/* 背景设置面板 */}
         {showSettings && (
           <BackgroundSettings onClose={() => setShowSettings(false)} />
+        )}
+
+        {praiseVisible && (
+          <div className="absolute inset-0 flex items-center justify-center z-50">
+            <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg px-8 py-6 flex flex-col items-center gap-4 mx-6">
+              <div className="text-2xl font-bold text-gray-800 text-center">{praiseMessage}</div>
+              <button
+                onClick={() => setPraiseVisible(false)}
+                className="px-5 py-1.5 rounded-lg bg-gray-800/80 text-white text-sm hover:bg-gray-900"
+              >
+                关闭
+              </button>
+            </div>
+          </div>
         )}
       </div>
     </div>
