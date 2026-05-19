@@ -13,11 +13,38 @@ function hexToRgba(hex: string, alpha: number): string {
 }
 
 const PRAISE_MESSAGES = [
-  "完成！💪", "帅🍾🍾🍾", "又拿下一个！", "稳！",
-  "很好，继续！", "干得漂亮！", "搞定！",
-  "nice！！！！🎉🎉🎉", "棒棒嘟😊", "继续保持！",
+  "又拿下一个，势不可挡！",
+  "干得漂亮，继续保持！",
+  "稳稳完成，你真的很棒！",
+  "搞定！效率满满的一天！",
+  "很好，继续加油！",
+  "完成任务，今天的你超厉害！",
+  "nice！一步一步都算数！",
+  "棒棒的，为自己鼓个掌！",
 ];
-const randomPraise = () => PRAISE_MESSAGES[Math.floor(Math.random() * PRAISE_MESSAGES.length)];
+const PRAISE_EMOJIS = [
+  "🎉", "🎊", "🍾", "✨", "🌟", "🏆", "💪", "👊", "👍", "🙌",
+  "✌️", "🥳", "😊", "😎", "🐱", "☀️", "🌈", "✅", "☑️", "📌", "🚀", "🎯",
+];
+const PRAISE_KAOMOJIS = [
+  "(๑•̀ㅂ•́)و✧",
+  "٩(ˊᗜˋ*)و",
+  "ヾ(≧▽≦*)o",
+  "(ง •̀_•́)ง",
+  "✧٩(ˊωˋ*)و✧",
+  "(｡•̀ᴗ-)✧",
+  "( •̀ ω •́ )✧",
+  "(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧",
+  "(˶ᵔ ᵕ ᵔ˶)",
+  "(｡･ω･｡)",
+  "(´▽`ʃ♡ƪ)",
+  "(づ｡◕‿‿◕｡)づ",
+  "(๑˃ᴗ˂)ﻭ",
+  "(´,,•ω•,,)",
+  "٩(๑❛ᴗ❛๑)۶",
+  "ᕦ(ò_óˇ)ᕤ",
+];
+const pick = <T,>(arr: T[]) => arr[Math.floor(Math.random() * arr.length)];
 
 function shiftDate(date: Date, days: number): Date {
   const d = new Date(date);
@@ -38,6 +65,8 @@ export default function TodoCard() {
   const [showSettings, setShowSettings] = useState(false);
   const [praiseVisible, setPraiseVisible] = useState(false);
   const [praiseMessage, setPraiseMessage] = useState('');
+  const [praiseEmoji, setPraiseEmoji] = useState('');
+  const [praiseKaomoji, setPraiseKaomoji] = useState('');
 
   const dateKey = toDateKey(selectedDate);
   const todos = useMemo(() => todosByDate[dateKey] || [], [todosByDate, dateKey]);
@@ -138,7 +167,12 @@ export default function TodoCard() {
                 <TodoItem
                   key={todo.id}
                   todo={todo}
-                  onComplete={() => { setPraiseMessage(randomPraise()); setPraiseVisible(true); }}
+                  onComplete={() => {
+                    setPraiseEmoji(pick(PRAISE_EMOJIS));
+                    setPraiseMessage(pick(PRAISE_MESSAGES));
+                    setPraiseKaomoji(pick(PRAISE_KAOMOJIS));
+                    setPraiseVisible(true);
+                  }}
                 />
               ))}
             </ul>
@@ -172,13 +206,20 @@ export default function TodoCard() {
 
         {praiseVisible && (
           <div className="absolute inset-0 flex items-center justify-center z-50">
-            <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg px-8 py-6 flex flex-col items-center gap-4 mx-6">
-              <div className="text-2xl font-bold text-gray-800 text-center">{praiseMessage}</div>
+            <div
+              className="bg-white/95 backdrop-blur-sm flex flex-col items-center gap-2 px-6 py-5 mx-auto"
+              style={{ width: 240, borderRadius: 20, boxShadow: '0 4px 24px rgba(0,0,0,0.10)' }}
+            >
+              <div className="text-xl leading-none text-gray-600">{praiseEmoji}</div>
+              <div className="text-base font-semibold text-gray-800 text-center leading-snug">
+                {praiseMessage}
+              </div>
+              <div className="text-xs text-gray-400">{praiseKaomoji}</div>
               <button
                 onClick={() => setPraiseVisible(false)}
-                className="px-5 py-1.5 rounded-lg bg-gray-800/80 text-white text-sm hover:bg-gray-900"
+                className="mt-1 px-5 py-1.5 rounded-full bg-gray-100 text-gray-600 text-sm hover:bg-gray-200 transition"
               >
-                关闭
+                知道啦
               </button>
             </div>
           </div>
