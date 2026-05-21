@@ -6,6 +6,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   setTodos: (todosByDate: any) => ipcRenderer.invoke('store:setTodos', todosByDate),
   setBackground: (bg: any) => ipcRenderer.invoke('store:setBackground', bg),
   setCalendarMode: (mode: string) => ipcRenderer.invoke('store:setCalendarMode', mode),
+  setPraiseEnabled: (enabled: boolean) => ipcRenderer.invoke('store:setPraiseEnabled', enabled),
 
   // 文件对话框
   pickImage: () => ipcRenderer.invoke('dialog:pickImage'),

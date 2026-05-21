@@ -23,10 +23,12 @@ declare global {
         todosByDate: TodosByDate;
         background: Background;
         calendarMode: CalendarMode;
+        praiseEnabled: boolean;
       }>;
       setTodos: (todosByDate: TodosByDate) => Promise<void>;
       setBackground: (bg: Background) => Promise<void>;
       setCalendarMode: (mode: CalendarMode) => Promise<void>;
+      setPraiseEnabled: (enabled: boolean) => Promise<void>;
       pickImage: () => Promise<string | null>;
       minimize: () => void;
       close: () => void;

@@ -77,6 +77,8 @@ export default function BackgroundSettings({ onClose }: { onClose: () => void })
   const background = useAppStore((s) => s.background);
   const setBackground = useAppStore((s) => s.setBackground);
   const previewBackground = useAppStore((s) => s.previewBackground);
+  const praiseEnabled = useAppStore((s) => s.praiseEnabled);
+  const setPraiseEnabled = useAppStore((s) => s.setPraiseEnabled);
 
   const [hexInput, setHexInput] = useState(
     background.type === 'color' ? background.value : '#FFF6B7'
@@ -206,7 +208,7 @@ export default function BackgroundSettings({ onClose }: { onClose: () => void })
   return createPortal(
     <div className="fixed top-12 left-1/2 -translate-x-1/2 z-[9999] w-64 bg-white rounded-xl shadow-2xl border border-black/10 p-3 no-drag overflow-y-auto max-h-[calc(100vh-56px)]">
       <div className="flex items-center justify-between mb-2">
-        <span className="text-sm font-semibold text-gray-800">背景设置</span>
+        <span className="text-sm font-semibold text-gray-800">设置</span>
         <button onClick={onClose} className="text-gray-500 hover:text-gray-800 text-sm">✕</button>
       </div>
 
@@ -383,6 +385,22 @@ export default function BackgroundSettings({ onClose }: { onClose: () => void })
         <span className="text-xs text-gray-600 w-8 text-right tabular-nums">
           {Math.round(background.opacity * 100)}%
         </span>
+      </div>
+
+      <div className="flex items-center justify-between mt-3">
+        <span className="text-xs text-gray-600">夸夸弹窗</span>
+        <button
+          type="button"
+          onClick={() => setPraiseEnabled(!praiseEnabled)}
+          className="relative w-10 h-5 rounded-full transition-colors duration-200 flex-shrink-0 focus:outline-none"
+          style={{ backgroundColor: praiseEnabled ? '#22c55e' : '#d1d5db' }}
+          aria-label={praiseEnabled ? '关闭夸夸弹窗' : '开启夸夸弹窗'}
+        >
+          <span
+            className="absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform duration-200"
+            style={{ transform: praiseEnabled ? 'translateX(20px)' : 'translateX(0)' }}
+          />
+        </button>
       </div>
     </div>
   , document.body);

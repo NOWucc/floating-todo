@@ -56,6 +56,7 @@ export default function TodoCard() {
   const selectedDate = useAppStore((s) => s.selectedDate);
   const todosByDate = useAppStore((s) => s.todosByDate);
   const background = useAppStore((s) => s.background);
+  const praiseEnabled = useAppStore((s) => s.praiseEnabled);
   const addTodo = useAppStore((s) => s.addTodo);
   const setSelectedDate = useAppStore((s) => s.setSelectedDate);
 
@@ -168,6 +169,7 @@ export default function TodoCard() {
                   key={todo.id}
                   todo={todo}
                   onComplete={() => {
+                    if (!praiseEnabled) return;
                     setPraiseEmoji(pick(PRAISE_EMOJIS));
                     setPraiseMessage(pick(PRAISE_MESSAGES));
                     setPraiseKaomoji(pick(PRAISE_KAOMOJIS));

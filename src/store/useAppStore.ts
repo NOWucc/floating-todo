@@ -8,6 +8,7 @@ interface AppState {
   viewMode: ViewMode;
   calendarMode: CalendarMode;
   background: Background;
+  praiseEnabled: boolean;
   loaded: boolean;
   apiError: string | null;
 
@@ -21,6 +22,7 @@ interface AppState {
   deleteTodo: (id: string) => void;
   setBackground: (bg: Background) => void;
   previewBackground: (bg: Background) => void;
+  setPraiseEnabled: (enabled: boolean) => void;
 }
 
 // 安全访问 electronAPI
@@ -36,6 +38,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   viewMode: 'todo',
   calendarMode: 'month',
   background: { type: 'color', value: '#FFF6B7', opacity: 1 },
+  praiseEnabled: true,
   loaded: false,
   apiError: null,
 
@@ -57,6 +60,7 @@ export const useAppStore = create<AppState>((set, get) => ({
           ? { ...data.background, opacity: data.background.opacity ?? 1 }
           : { type: 'color', value: '#FFF6B7', opacity: 1 },
         calendarMode: data.calendarMode || 'month',
+        praiseEnabled: data.praiseEnabled ?? true,
         loaded: true,
       });
     } catch (err) {
@@ -132,5 +136,10 @@ export const useAppStore = create<AppState>((set, get) => ({
   previewBackground: (bg) => {
     set({ background: bg });
     // 不调用 api，不持久化——仅用于调色盘实时预览
+  },
+
+  setPraiseEnabled: (enabled) => {
+    set({ praiseEnabled: enabled });
+    api()?.setPraiseEnabled(enabled);
   },
 }));

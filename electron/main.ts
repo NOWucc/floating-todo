@@ -12,6 +12,7 @@ interface StoreSchema {
   todosByDate?: Record<string, { id: string; text: string; done: boolean; createdAt: number }[]>;
   background?: { type: 'color' | 'image'; value: string };
   calendarMode?: 'day' | 'week' | 'month';
+  praiseEnabled?: boolean;
 }
 
 const store = new Store<StoreSchema>({
@@ -20,6 +21,7 @@ const store = new Store<StoreSchema>({
     todosByDate: {},
     background: { type: 'color', value: '#FFF6B7' },
     calendarMode: 'month',
+    praiseEnabled: true,
   },
 });
 
@@ -124,7 +126,11 @@ ipcMain.handle('store:getAll', () => ({
   todosByDate: store.get('todosByDate'),
   background: store.get('background'),
   calendarMode: store.get('calendarMode'),
+  praiseEnabled: store.get('praiseEnabled') ?? true,
 }));
+ipcMain.handle('store:setPraiseEnabled', (_e, enabled: boolean) => {
+  store.set('praiseEnabled', enabled);
+});
 ipcMain.handle('store:setTodos', (_e, todosByDate) => {
   store.set('todosByDate', todosByDate);
 });
