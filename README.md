@@ -34,8 +34,9 @@
 
 ## 🚀 直接运行
 
-无需安装开发环境，从 [Releases](../../releases) 下载 exe 后双击即可运行。
-
+无需安装开发环境，从
+[点击下载 Windows 安装包](https://github.com/NOWucc/floating-todo/releases/latest)
+后双击即可运行。
 ---
 
 ## 🛠️ 开发
