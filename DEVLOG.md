@@ -1,5 +1,16 @@
 # 开发记录
 
+## 2026-05-24
+
+### 构建配置
+
+**exe 图标**
+- `package.json` 新增 `build` 配置块，指定 `win.icon` 为 `build/icon.ico`
+- 打包产物输出至 `release/` 目录，目标格式为 NSIS 安装包
+- 执行 `npm run build` 后即可得到带自定义图标的 exe
+
+---
+
 ## 2026-05-21
 
 ### 新功能

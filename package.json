@@ -18,6 +18,17 @@
     "react-dom": "^18.3.1",
     "zustand": "^4.5.5"
   },
+  "build": {
+    "appId": "com.you.floating-todo",
+    "productName": "floating-todo",
+    "directories": {
+      "output": "release"
+    },
+    "win": {
+      "icon": "build/icon.ico",
+      "target": "nsis"
+    }
+  },
   "devDependencies": {
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
