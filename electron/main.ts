@@ -140,6 +140,22 @@ ipcMain.handle('store:setBackground', (_e, bg) => {
 ipcMain.handle('store:setCalendarMode', (_e, mode) => {
   store.set('calendarMode', mode);
 });
+ipcMain.handle('diary:get', (_e, dateKey: string) => {
+  const safeDateKey = /^\d{4}-\d{2}-\d{2}$/.test(dateKey) ? dateKey : null;
+  if (!safeDateKey) return '';
+  const diaryDir = path.join(app.getPath('userData'), 'diary');
+  const diaryFile = path.join(diaryDir, `${safeDateKey}.md`);
+  if (!fs.existsSync(diaryFile)) return '';
+  return fs.readFileSync(diaryFile, 'utf-8');
+});
+ipcMain.handle('diary:save', (_e, dateKey: string, content: string) => {
+  const safeDateKey = /^\d{4}-\d{2}-\d{2}$/.test(dateKey) ? dateKey : null;
+  if (!safeDateKey) return;
+  const diaryDir = path.join(app.getPath('userData'), 'diary');
+  fs.mkdirSync(diaryDir, { recursive: true });
+  const diaryFile = path.join(diaryDir, `${safeDateKey}.md`);
+  fs.writeFileSync(diaryFile, content ?? '', 'utf-8');
+});
 ipcMain.handle('dialog:pickImage', async () => {
   if (!mainWindow) return null;
   const result = await dialog.showOpenDialog(mainWindow, {

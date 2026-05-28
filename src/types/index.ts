@@ -14,7 +14,7 @@ export interface Background {
 }
 
 export type CalendarMode = 'day' | 'week' | 'month';
-export type ViewMode = 'todo' | 'calendar';
+export type ViewMode = 'todo' | 'calendar' | 'diary';
 
 declare global {
   interface Window {
@@ -29,6 +29,8 @@ declare global {
       setBackground: (bg: Background) => Promise<void>;
       setCalendarMode: (mode: CalendarMode) => Promise<void>;
       setPraiseEnabled: (enabled: boolean) => Promise<void>;
+      getDiary: (dateKey: string) => Promise<string>;
+      saveDiary: (dateKey: string, content: string) => Promise<void>;
       pickImage: () => Promise<string | null>;
       minimize: () => void;
       close: () => void;

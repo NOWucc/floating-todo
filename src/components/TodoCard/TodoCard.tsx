@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+﻿import { useMemo, useState } from 'react';
 import { useAppStore } from '../../store/useAppStore';
 import { toDateKey, formatDisplay } from '../../utils/date';
 import TodoItem from './TodoItem';
@@ -91,11 +91,8 @@ export default function TodoCard() {
 
   return (
     <div className="h-full w-full">
-      {/* 卡片本体 */}
       <div className="relative h-full w-full flex flex-col overflow-hidden isolate">
-        {/* 背景层：opacity 仅作用于此层，不影响内容 */}
         <div className="absolute inset-0 -z-10" style={bgLayerStyle} />
-        {/* 顶部窗口拖动条 + 控制按钮 */}
         <div className="drag-region flex items-center justify-between px-4 pt-3 pb-1">
           <div className="no-drag flex items-center gap-1">
             <button
@@ -140,6 +137,16 @@ export default function TodoCard() {
               </svg>
             </button>
             <button
+              onClick={() => setViewMode('diary')}
+              className="w-7 h-7 rounded-full hover:bg-black/10 flex items-center justify-center text-gray-700"
+              title="打开日记"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+              </svg>
+            </button>
+            <button
               onClick={() => window.electronAPI.minimize()}
               className="w-7 h-7 rounded-full hover:bg-black/10 flex items-center justify-center text-gray-700"
               title="最小化"
@@ -156,7 +163,6 @@ export default function TodoCard() {
           </div>
         </div>
 
-        {/* 待办列表 */}
         <div className="flex-1 overflow-y-auto px-4 py-2 no-drag">
           {todos.length === 0 ? (
             <div className="text-sm text-gray-600/80 italic mt-4 text-center">
@@ -181,7 +187,6 @@ export default function TodoCard() {
           )}
         </div>
 
-        {/* 底部输入框 */}
         <form
           onSubmit={handleAdd}
           className="no-drag p-3 border-t border-black/10 flex gap-2"
@@ -201,7 +206,6 @@ export default function TodoCard() {
           </button>
         </form>
 
-        {/* 背景设置面板 */}
         {showSettings && (
           <BackgroundSettings onClose={() => setShowSettings(false)} />
         )}

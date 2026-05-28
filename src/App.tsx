@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useAppStore } from './store/useAppStore';
 import TodoCard from './components/TodoCard/TodoCard';
 import CalendarView from './components/Calendar/CalendarView';
+import DiaryView from './components/Diary/DiaryView';
 
 export default function App() {
   const viewMode = useAppStore((s) => s.viewMode);
@@ -22,7 +23,9 @@ export default function App() {
 
   return (
     <div className="h-full w-full">
-      {viewMode === 'todo' ? <TodoCard /> : <CalendarView />}
+      {viewMode === 'todo' && <TodoCard />}
+      {viewMode === 'calendar' && <CalendarView />}
+      {viewMode === 'diary' && <DiaryView />}
     </div>
   );
 }
